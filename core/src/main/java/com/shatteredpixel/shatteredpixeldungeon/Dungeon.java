@@ -394,8 +394,11 @@ public class Dungeon {
 		}
 
 		Statistics.qualifiedForBossRemainsBadge = false;
-		
+		//ログを出力できるか確認(2026/10/21/23:51) /w Claude
+		//System.out.println("[SPD-LOG] newLevel depth=" + depth + " branch=" + branch + " type=" + level.getClass().getSimpleName());
 		level.create();
+		//ログをcsvとして取得する（2026/10/21/23:59 > 2026/10/22/1:33 > 2026/10/22/1:59） /w Claude
+		ResearchLog.write(System.currentTimeMillis() + "," + depth + "," + branch + "," + level.getClass().getSimpleName() + "," + level.feeling + "," + level.mobs.size() + "," + ResearchParams.mobMultiplier());
 		
 		if (branch == 0) Statistics.qualifiedForNoKilling = !bossLevel();
 		Statistics.qualifiedForBossChallengeBadge = false;

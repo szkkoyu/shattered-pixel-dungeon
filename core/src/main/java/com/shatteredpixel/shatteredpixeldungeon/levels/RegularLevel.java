@@ -219,7 +219,12 @@ public abstract class RegularLevel extends Level {
 	@Override
 	protected void createMobs() {
 		//on floor 1, 8 pre-set mobs are created so the player can get level 2.
-		int mobsToSpawn = Dungeon.depth == 1 ? 8 : mobLimit();
+		//2026/10/22/1:31 /w Claude
+		//int mobsToSpawn = Dungeon.depth == 1 ? 8 : mobLimit();
+
+		int baseMobs = Dungeon.depth == 1 ? 8 : mobLimit();
+        int mobsToSpawn = Dungeon.depth == 1 ? baseMobs : Math.max(1, Math.round(baseMobs * com.shatteredpixel.shatteredpixeldungeon.ResearchParams.mobMultiplier()));
+        System.out.println("[SPD-LOG] mobs base=" + baseMobs + " actual=" + mobsToSpawn);
 
 		ArrayList<Room> stdRooms = new ArrayList<>();
 		for (Room room : rooms) {
