@@ -1,0 +1,4 @@
+session,run,time,depth,branch,type,feeling,mobs,mob_multiplier,hp_entry,hp_max,prev_depth,prev_time,prev_kills,prev_hp_net,prev_hp_ratio,auto
+1793768629530,1,1793768629593,1,0,SewerLevel,NONE,8,1.0,20,20,,,,,,true
+1793768809014,1,1793768809083,1,0,SewerLevel,NONE,8,1.0,20,20,,,,,,true
+1793768809014,1,1793768896276,2,0,SewerLevel,LARGE,9,1.0,18,20,1,142.0,5,-2,-0.100,true

@@ -1,0 +1,3 @@
+session,run,time,depth,branch,type,feeling,mobs,mob_multiplier,hp_entry,hp_max,prev_depth,prev_time,prev_kills,prev_hp_net
+1792644854773,1,1792644854773,1,0,SewerLevel,NONE,8,3.0,20,20,,,,
+1792644854773,1,1792645014354,2,0,SewerLevel,CHASM,16,3.0,25,25,1,336.0,8,5
