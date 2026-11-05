@@ -18,3 +18,7 @@ local.properties
 #intellij project files
 *.iml
 *.idea
+
+# Research: runtime files (not tracked; see CLAUDE.md)
+desktop/research_params.txt
+desktop/research_floor_log*.csv
