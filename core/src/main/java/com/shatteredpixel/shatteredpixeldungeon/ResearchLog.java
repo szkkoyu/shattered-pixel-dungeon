@@ -22,7 +22,7 @@ public class ResearchLog {
 	private static final String FILE_NAME = "research_floor_log.csv";
 	private static final String HEADER =
 			"session,run,time,depth,branch,type,feeling,mobs,mob_multiplier,"
-			+ "hp_entry,hp_max,prev_depth,prev_time,prev_kills,prev_hp_net,prev_hp_ratio,auto";
+			+ "hp_entry,hp_max,prev_depth,prev_time,prev_kills,prev_hp_net,prev_hp_ratio,auto,seed";
 
 	private static final long SESSION = System.currentTimeMillis();
 	private static boolean pathPrinted = false;
@@ -109,7 +109,8 @@ public class ResearchLog {
 				+ "," + depth + "," + branch + "," + type + "," + feeling
 				+ "," + mobs + "," + ResearchParams.mobMultiplier()
 				+ "," + hp + "," + hpMax + "," + prevCols
-				+ "," + ResearchParams.autoMode();
+				+ "," + ResearchParams.autoMode()
+				+ "," + Dungeon.seed;
 		write(line);
 
 		hasPrev = true;
