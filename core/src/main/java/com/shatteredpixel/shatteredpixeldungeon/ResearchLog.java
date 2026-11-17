@@ -22,7 +22,7 @@ public class ResearchLog {
 	private static final String FILE_NAME = "research_floor_log.csv";
 	private static final String HEADER =
 			"session,run,time,depth,branch,type,feeling,mobs,mob_multiplier,"
-			+ "hp_entry,hp_max,prev_depth,prev_time,prev_kills,prev_hp_net,prev_hp_ratio,auto,seed";
+			+ "hp_entry,hp_max,prev_depth,prev_time,prev_kills,prev_hp_net,prev_hp_ratio,auto,seed,event,cause";
 
 	private static final long SESSION = System.currentTimeMillis();
 	private static boolean pathPrinted = false;
@@ -40,6 +40,9 @@ public class ResearchLog {
 
 	// beforeCreate() で計算した、直前フロアの結果(NaN = 計算できなかった)
 	private static float prevHpRatio = Float.NaN;
+
+	// 同じ死亡を2回書かないための印。新しいフロアができたら消す
+	private static boolean deathLogged = false;
 
 	/** 直前の記録を、今回の判定に使えるか(新しいプレイの始まりなら、使えない) */
 	private static boolean prevIsValid(int depth, int branch) {
@@ -110,9 +113,11 @@ public class ResearchLog {
 				+ "," + mobs + "," + ResearchParams.mobMultiplier()
 				+ "," + hp + "," + hpMax + "," + prevCols
 				+ "," + ResearchParams.autoMode()
-				+ "," + Dungeon.seed;
+				+ "," + Dungeon.seed
+				+ ",level,";
 		write(line);
 
+		deathLogged = false;
 		hasPrev = true;
 		prevDepth = depth;
 		prevBranch = branch;
@@ -120,6 +125,49 @@ public class ResearchLog {
 		prevDuration = duration;
 		prevKills = kills;
 		prevHpEntry = hp;
+	}
+
+	/**
+	 * Dungeon.fail() から呼ぶ(アンクで復活しない、本当の死亡のときだけ)。
+	 * 死亡したフロアの結果を、prev_* の列に入れて1行追記する。
+	 */
+	public static void onDeath(Object cause) {
+		if (deathLogged || Dungeon.hero == null) return;
+		deathLogged = true;
+
+		float duration = Statistics.duration;
+		int kills = Statistics.enemiesSlain;
+		int hp = Math.max(0, Dungeon.hero.HP); // マイナスになるかは未確認。念のため0にそろえる
+		int hpMax = Dungeon.hero.HT;
+
+		String prevCols;
+		if (hasPrev && duration >= prevDuration && hpMax > 0) {
+			prevCols = prevDepth
+					+ "," + String.format(Locale.ROOT, "%.1f", duration - prevDuration)
+					+ "," + (kills - prevKills)
+					+ "," + (hp - prevHpEntry)
+					+ "," + String.format(Locale.ROOT, "%.3f", (hp - prevHpEntry) / (float) hpMax);
+		} else {
+			prevCols = ",,,,";
+		}
+
+		String type = Dungeon.level == null ? "" : Dungeon.level.getClass().getSimpleName();
+
+		String line = SESSION + "," + run + "," + System.currentTimeMillis()
+				+ "," + Dungeon.depth + "," + Dungeon.branch + "," + type + ","   // feeling は空
+				+ "," + "" + "," + ResearchParams.mobMultiplier()                 // mobs は空
+				+ "," + hp + "," + hpMax + "," + prevCols
+				+ "," + ResearchParams.autoMode()
+				+ "," + Dungeon.seed
+				+ ",death," + causeName(cause);
+		write(line);
+	}
+
+	/** 死因の名前。クラスが渡されることも、物が渡されることもある */
+	private static String causeName(Object cause) {
+		if (cause == null) return "";
+		if (cause instanceof Class) return ((Class<?>) cause).getSimpleName();
+		return cause.getClass().getSimpleName();
 	}
 
 	private static void write(String line) {

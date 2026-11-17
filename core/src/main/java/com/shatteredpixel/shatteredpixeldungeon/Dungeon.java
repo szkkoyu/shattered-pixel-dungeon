@@ -877,6 +877,7 @@ public class Dungeon {
 	
 	public static void fail( Object cause ) {
 		if (WndResurrect.instance == null) {
+			ResearchLog.onDeath(cause); //死亡した階層をcsvに記録する(2026/11/10) /w Claude
 			updateLevelExplored();
 			Statistics.gameWon = false;
 			Rankings.INSTANCE.submit( false, cause );
