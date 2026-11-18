@@ -22,3 +22,7 @@ local.properties
 # Research: runtime files (not tracked; see CLAUDE.md)
 desktop/research_params.txt
 desktop/research_floor_log*.csv
+
+# Private notes (kept local only)
+CLAUDE.md
+TODO.md
